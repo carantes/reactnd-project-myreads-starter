@@ -5,6 +5,7 @@ import Menu from './Menu'
 const Book = (props) => {
 
   const {
+    shelfId,
     id,
     title,
     imageLinks,
@@ -13,7 +14,7 @@ const Book = (props) => {
   } = props
 
   const menuRender = (bookId) => (
-    <Menu bookId={bookId} onChangeMenu={onMoveBook} />
+    <Menu bookId={bookId} onChangeMenu={onMoveBook} active={shelfId} />
   )
 
   return (
