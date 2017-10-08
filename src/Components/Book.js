@@ -1,6 +1,6 @@
 import React from 'react';
-import Menu from './Menu/Menu';
 import PropTypes from 'prop-types';
+import Menu from './Menu'
 
 const Book = (props) => {
 
@@ -9,15 +9,18 @@ const Book = (props) => {
     title,
     imageLinks,
     authors,
-    bookShelfId,
     onMoveBook
   } = props
+
+  const menuRender = (bookId) => (
+    <Menu bookId={bookId} onChangeMenu={onMoveBook} />
+  )
 
   return (
     <div className="book">
       <div className="book-top">
         <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url("${imageLinks.smallThumbnail}")` }}></div>
-        <Menu bookShelfId={bookShelfId} bookId={id} onChangeMenu={onMoveBook} />
+        {menuRender(id)}
       </div>
       <div className="book-title">{title}</div>
       <div className="book-authors">{authors}</div>
@@ -29,9 +32,7 @@ Book.propTypes = {
   id: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   imageLinks: PropTypes.object.isRequired,
-  authors: PropTypes.array.isRequired,
-  bookShelfId: PropTypes.string.isRequired,
-  onMoveBook: PropTypes.func.isRequired
+  authors: PropTypes.array
 }
 
 export default Book;

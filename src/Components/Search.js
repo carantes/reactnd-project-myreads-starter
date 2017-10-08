@@ -1,29 +1,107 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import Book from './Book';
+import * as BooksAPI from '../Api/BooksAPI'
+
+const WAIT_INTERVAL = 500;
 
 class Search extends Component {
-  render() {
-    return (
-      <div className="search-books">
-        <div className="search-books-bar">
-          <Link className="close-search" to="/">Close</Link>
-          <div className="search-books-input-wrapper">
-            {/*
-                  NOTES: The search from BooksAPI is limited to a particular set of search terms.
-                  You can find these search terms here:
-                  https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
 
-                  However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-                  you don't find a specific author or title. Every search is limited by search terms.
-                */}
-            <input type="text" placeholder="Search by title or author" />
-          </div>
-        </div>
-        <div className="search-books-results">
-          <ol className="books-grid"></ol>
-        </div>
+  state = {
+    loading: false,
+    books: []
+  }
+
+  constructor(props) {
+    super();
+
+    this.state = {
+      books: [],
+      newBooks: {
+        "currentlyReading": [],
+        "wantToRead": [],
+        "read": []
+      }
+    };
+
+    this.timer = null;
+  }
+
+  handleChange = (e) => {
+    clearTimeout(this.timer);
+    const param = e.target.value;
+    this.timer = setTimeout(() => this.searchBooks(param), WAIT_INTERVAL);
+
+  }
+
+  searchBooks (param) {
+    this.setState({ loading: true });
+    BooksAPI.search(param, 20).then((results) => {
+      let books;
+      results.error ? books = [] : books = results
+      
+      this.setState({
+        books,
+        loading: false
+      })
+    })
+  }
+
+  addBookToShelf = (bookId, shelf) => {
+    const {
+      books,
+      newBooks
+    } = this.state;
+
+    const book = books.filter((book) => book.id === bookId)[0];
+    newBooks[shelf].push(book);
+
+    this.setState({
+      newBooks
+    })
+  }
+
+  render() {
+
+    const {
+      loading,
+      books
+    } = this.state;
+
+    const SearchResults = (
+      <div className="search-books-results">
+        <ol className="books-grid">
+          {
+            books.map(book => (
+              <li key={book.id} >
+                <Book {...book} onMoveBook={this.addBookToShelf}  />
+              </li>
+          ))}
+        </ol>
       </div>
     );
+
+    const LoadingSearch = (
+      <div className="search-books-results">
+        Loading...
+      </div>
+    );
+
+    return (
+      <div className="search-books">
+      <div className="search-books-bar">
+        <Link className="close-search" to="/">Close</Link>
+        <div className="search-books-input-wrapper">
+          <input 
+            type="text" 
+            onChange={this.handleChange}
+            placeholder="Search by title or author" 
+          />
+        </div>
+      </div>
+      { loading ? LoadingSearch : SearchResults }
+    </div>
+    )
   }
 }
 
