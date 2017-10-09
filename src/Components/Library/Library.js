@@ -1,29 +1,12 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import Bookshelf from '../Bookshelf'
-import * as BooksAPI from '../../Api/BooksAPI'
+import Bookshelf from './Bookshelf'
 import { title, shelfs } from './data.json';
 
 class Library extends Component {
 
-  state = {
-    books: {
-      "currentlyReading": [],
-      "wantToRead": [],
-      "read": []
-    }
-  }
-
-  componentDidMount() {
-    BooksAPI.getAll().then((newBooks) => {
-      const { books } = this.state;
-      newBooks.map(book => (books[book.shelf].push(book)))
-      this.setState({ books })
-    })
-  }
-
   getAllBooks() {
-    const { books } = this.state;
+    const { books } = this.props;
     return books["currentlyReading"].concat(books["wantToRead"], books["read"]);
   }
 
@@ -34,12 +17,12 @@ class Library extends Component {
   }
 
   getBooksShelf(shelf) {
-    return this.state.books[shelf];
+    return this.props.books[shelf];
   }
 
   moveBookFromTo = (bookId, to) => {  
     const book = this.getBookById(bookId);
-    const { books } = this.state;
+    const { books } = this.props;
     
     //Remove book from shelf
     const from = book.shelf;

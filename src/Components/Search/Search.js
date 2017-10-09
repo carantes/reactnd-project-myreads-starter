@@ -1,27 +1,18 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import Book from './Book';
-import * as BooksAPI from '../Api/BooksAPI'
+import SearchResults from './Results';
+import * as BooksAPI from '../../Api/BooksAPI'
 
 const WAIT_INTERVAL = 500;
 
 class Search extends Component {
 
-  state = {
-    loading: false,
-    books: []
-  }
-
   constructor(props) {
     super();
 
     this.state = {
-      books: [],
-      newBooks: {
-        "currentlyReading": [],
-        "wantToRead": [],
-        "read": []
-      }
+      loading: false,
+      search: []
     };
 
     this.timer = null;
@@ -34,52 +25,60 @@ class Search extends Component {
 
   }
 
+  getAllBooks() {
+    const { books } = this.props;
+    return books["currentlyReading"].concat(books["wantToRead"], books["read"]);
+  }
+
+  getBookById(bookId) {
+    const searchContext = this.getAllBooks();
+    const book = searchContext.filter(book => book.id === bookId)[0];
+    return book;
+  }
+
   searchBooks (param) {
     this.setState({ loading: true });
+
     BooksAPI.search(param, 20).then((results) => {
-      let books;
-      results.error ? books = [] : books = results
+      let search;
+      results.error ? search = [] : search = results
+
+      const books = this.getAllBooks();
+
+      search.map(item => {
+        const found = this.getBookById(item.id);
+        found ? item.shelf = found.shelf : item.shelf = '';
+        return item;
+      })
       
       this.setState({
-        books,
-        loading: false
+        loading: false,
+        search,
+        books
       })
     })
   }
 
   addBookToShelf = (bookId, shelf) => {
-    const {
-      books,
-      newBooks
-    } = this.state;
+    const { search } = this.state;
 
-    const book = books.filter((book) => book.id === bookId)[0];
-    newBooks[shelf].push(book);
+    const book = search.filter((book) => book.id === bookId)[0];
+    book.shelf = shelf;
+
+    const books = this.props.books;
+    books[shelf].push(book);
 
     this.setState({
-      newBooks
-    })
+      books
+    });
   }
 
   render() {
 
     const {
       loading,
-      books
+      search
     } = this.state;
-
-    const SearchResults = (
-      <div className="search-books-results">
-        <ol className="books-grid">
-          {
-            books.map(book => (
-              <li key={book.id} >
-                <Book {...book} onMoveBook={this.addBookToShelf}  />
-              </li>
-          ))}
-        </ol>
-      </div>
-    );
 
     const LoadingSearch = (
       <div className="search-books-results">
@@ -99,7 +98,7 @@ class Search extends Component {
           />
         </div>
       </div>
-      { loading ? LoadingSearch : SearchResults }
+      { loading ? LoadingSearch : <SearchResults books={search} onMoveBook={this.addBookToShelf} /> }
     </div>
     )
   }

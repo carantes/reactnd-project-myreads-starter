@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Book from './Book';
+import Book from '../Book';
 
 const Bookshelf = (props) => {
 
   const {
-    id,
     title,
     books,
     onMoveBook
@@ -19,7 +18,7 @@ const Bookshelf = (props) => {
           {
             books.map(book => (
               <li key={book.id} >
-                <Book shelfId={id} {...book} onMoveBook={onMoveBook} />
+                <Book {...book} onMoveBook={onMoveBook} />
               </li>
           ))}
         </ol>
