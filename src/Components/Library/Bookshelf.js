@@ -5,10 +5,13 @@ import Book from '../Book';
 const Bookshelf = (props) => {
 
   const {
-    title,
+    id,
     books,
+    title,
     onMoveBook
   } = props;
+
+  const shelf = books[id];
 
   return (
     <div className="bookshelf">
@@ -16,7 +19,7 @@ const Bookshelf = (props) => {
       <div className="bookshelf-books">
         <ol className="books-grid">
           {
-            books.map(book => (
+            shelf.map(book => (
               <li key={book.id} >
                 <Book {...book} onMoveBook={onMoveBook} />
               </li>
@@ -29,7 +32,7 @@ const Bookshelf = (props) => {
 
 Bookshelf.propTypes = {
   id: PropTypes.string.isRequired,
-  books: PropTypes.array.isRequired,
+  books: PropTypes.object.isRequired,
   title: PropTypes.string.isRequired,
   onMoveBook: PropTypes.func.isRequired
 }

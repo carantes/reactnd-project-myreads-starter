@@ -2,26 +2,19 @@ import React, { Component } from 'react'
 import { Route } from 'react-router-dom';
 import Library from '../Library/Library';
 import Search from '../Search/Search';
-import * as BooksAPI from '../../Api/BooksAPI'
-
+import BooksData from '../../Utils/BooksData';
 import './App.css'
 
 class App extends Component {
 
   state = {
-    books: {
-      "currentlyReading": [],
-      "wantToRead": [],
-      "read": []
-    }
+    books: new BooksData()
   }
 
-  componentDidMount() {
-    BooksAPI.getAll().then((newBooks) => {
-      const { books } = this.state;
-      newBooks.map(book => (books[book.shelf].push(book)))
-      this.setState({ books })
-    })
+  updateState = (books, cb) => {
+    this.setState({
+      books
+    }, cb)
   }
 
   render () {
@@ -29,10 +22,10 @@ class App extends Component {
     return (
       <div className="app">
         <Route exact path="/" render={() => (
-          <Library books={books} />
+          <Library books={books} onUpdateSharedState={this.updateState} />
         )}/>
         <Route path="/search" render={({ history }) => (
-          <Search books={books} />
+          <Search books={books} onUpdateSharedState={this.updateState} />
         )}/>
       </div>
     );

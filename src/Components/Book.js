@@ -17,11 +17,13 @@ const Book = (props) => {
     <Menu bookId={bookId} onChangeMenu={onMoveBook} active={shelf} />
   )
 
+  const menuStyle = { width: 128, height: 193, backgroundImage: `url("${imageLinks.smallThumbnail}")` };
+
   return (
     <div className="book">
       <div className="book-top">
-        <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url("${imageLinks.smallThumbnail}")` }}></div>
-        {menuRender(id)}
+        <div className="book-cover" style={menuStyle}></div>
+        { menuRender(id) }
       </div>
       <div className="book-title">{title}</div>
       <div className="book-authors">{authors}</div>

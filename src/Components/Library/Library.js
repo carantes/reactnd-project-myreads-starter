@@ -1,44 +1,45 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import Bookshelf from './Bookshelf'
-import { title, shelfs } from './data.json';
+import Bookshelf from './Bookshelf';
+import Loading from '../Loading';
+import { title, shelfs, buttonTitle } from './data.json';
+import BooksAPI from '../../Utils/BooksAPI'
+import BooksData from '../../Utils/BooksData';
 
 class Library extends Component {
 
-  getAllBooks() {
-    const { books } = this.props;
-    return books["currentlyReading"].concat(books["wantToRead"], books["read"]);
+  state = {
+    loading: true
   }
 
-  getBookById (bookId) {
-    const searchContext = this.getAllBooks();
-    const book = searchContext.filter(book => book.id === bookId)[0];
-    return book;
+  updateState (books, loading) {
+    this.props.onUpdateSharedState(books, () => {
+      this.setState({
+        loading
+      })
+    })
   }
 
-  getBooksShelf(shelf) {
-    return this.props.books[shelf];
+  componentDidMount() {
+    BooksAPI.getAll()
+      .then((books) => new BooksData(books))
+      .then((books) => this.updateState(books, false));
   }
 
-  moveBookFromTo = (bookId, to) => {  
-    const book = this.getBookById(bookId);
-    const { books } = this.props;
-    
-    //Remove book from shelf
-    const from = book.shelf;
-    books[from] = books[from].filter(book => book.id !== bookId); 
-    
-    //Add book to new Shelf
-    book.shelf = to;   
-    books[to].push(book);
-
-    //update
-    this.setState({
-      books
-    });
+  moveBookAndUpdate = (bookId, shelf) => {
+    BooksAPI.update(bookId, shelf)
+      .then((result) => this.props.books.moveBookByIdToShelf(bookId, shelf))
+      .then((books) => this.updateState(books));
   }
+
+  renderBookShelf = (id, title, books) => (
+    <Bookshelf key={id} id={id} title={title} books={books} onMoveBook={this.moveBookAndUpdate} />
+  )
 
   render() {
+
+    const { books } = this.props;
+    const { loading } = this.state;
     
     return (
       <div className="list-books">
@@ -47,13 +48,11 @@ class Library extends Component {
         </div>
         <div className="list-books-content">
           <div>
-            {shelfs.map(shelf => (
-              <Bookshelf key={shelf.id} id={shelf.id} title={shelf.title} books={this.getBooksShelf(shelf.id)} onMoveBook={this.moveBookFromTo} />
-            ))}
+            { loading ? <Loading /> : shelfs.map(shelf => ( this.renderBookShelf(shelf.id, shelf.title, books) )) }
           </div>
         </div>
         <div className="open-search">
-          <Link to="/search" >Add a book</Link>
+          <Link to="/search" >{buttonTitle}</Link>
         </div>
       </div>
     );

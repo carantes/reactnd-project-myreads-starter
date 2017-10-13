@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import SearchResults from './Results';
-import * as BooksAPI from '../../Api/BooksAPI'
-
-const WAIT_INTERVAL = 500;
+import Loading from '../Loading';
+import BooksAPI from '../../Utils/BooksAPI'
+import { wait_interval } from '../../Utils/Constants'
 
 class Search extends Component {
 
@@ -21,56 +21,40 @@ class Search extends Component {
   handleChange = (e) => {
     clearTimeout(this.timer);
     const param = e.target.value;
-    this.timer = setTimeout(() => this.searchBooks(param), WAIT_INTERVAL);
+    this.timer = setTimeout(() => this.searchBooks(param), wait_interval);
 
   }
 
-  getAllBooks() {
-    const { books } = this.props;
-    return books["currentlyReading"].concat(books["wantToRead"], books["read"]);
+  mapBooksCurrentShelf (results) {
+    let search;
+    results.error ? search = [] : search = results;
+
+    search.map(item => {
+      const found = this.props.books.getBookById(item.id);
+      found ? item.shelf = found.shelf : item.shelf = '';
+      return item;
+    })
+
+    return search
   }
 
-  getBookById(bookId) {
-    const searchContext = this.getAllBooks();
-    const book = searchContext.filter(book => book.id === bookId)[0];
-    return book;
+  selectedBook (bookId) {
+    return this.state.search.filter((book) => book.id === bookId)[0]
   }
 
   searchBooks (param) {
     this.setState({ loading: true });
 
-    BooksAPI.search(param, 20).then((results) => {
-      let search;
-      results.error ? search = [] : search = results
-
-      const books = this.getAllBooks();
-
-      search.map(item => {
-        const found = this.getBookById(item.id);
-        found ? item.shelf = found.shelf : item.shelf = '';
-        return item;
-      })
-      
-      this.setState({
-        loading: false,
-        search,
-        books
-      })
-    })
+    BooksAPI.search(param, 20)
+      .then((results) => this.mapBooksCurrentShelf(results))
+      .then((search) => this.setState({ loading: false, search }))
   }
 
-  addBookToShelf = (bookId, shelf) => {
-    const { search } = this.state;
-
-    const book = search.filter((book) => book.id === bookId)[0];
-    book.shelf = shelf;
-
-    const books = this.props.books;
-    books[shelf].push(book);
-
-    this.setState({
-      books
-    });
+  moveBookAndUpdate = (bookId, shelf) => {  
+    BooksAPI.update(bookId, shelf)
+      .then((result) => this.selectedBook(bookId))
+      .then((book) => this.props.books.addBookToShelf(book, shelf))
+      .then((books) => this.props.onUpdateSharedState(books))
   }
 
   render() {
@@ -79,12 +63,6 @@ class Search extends Component {
       loading,
       search
     } = this.state;
-
-    const LoadingSearch = (
-      <div className="search-books-results">
-        Loading...
-      </div>
-    );
 
     return (
       <div className="search-books">
@@ -98,7 +76,7 @@ class Search extends Component {
           />
         </div>
       </div>
-      { loading ? LoadingSearch : <SearchResults books={search} onMoveBook={this.addBookToShelf} /> }
+      { loading ? <Loading /> : <SearchResults books={search} onMoveBook={this.moveBookAndUpdate} /> }
     </div>
     )
   }
