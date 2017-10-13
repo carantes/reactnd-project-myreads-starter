@@ -27,9 +27,9 @@ class Library extends Component {
   }
 
   moveBookAndUpdate = (bookId, shelf) => {
-    BooksAPI.update(bookId, shelf)
+    shelf ? BooksAPI.update(bookId, shelf)
       .then((result) => this.props.books.moveBookByIdToShelf(bookId, shelf))
-      .then((books) => this.updateState(books));
+      .then((books) => this.updateState(books)) : console.log('Cannot move book to a empty shelf');
   }
 
   renderBookShelf = (id, title, books) => (

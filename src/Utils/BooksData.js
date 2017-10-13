@@ -4,8 +4,9 @@ function BooksData (books) {
   this.wantToRead = [];
   this.read = [];
 
-  if (books)
+  if (books) {
     books.map(book => this[book.shelf].push(book))
+  }
 }
 
 BooksData.prototype.getAllBooks = function() {
@@ -17,6 +18,10 @@ BooksData.prototype.getBookById = function(bookId) {
 }
 
 BooksData.prototype.moveBookByIdToShelf = function(bookId, shelf) {
+  if (shelf === '') {
+    return this;
+  }
+
   const book = this.getBookById(bookId);
 
   //remove from current shelf
@@ -35,7 +40,7 @@ BooksData.prototype.addBookToShelf = function(book, shelf) {
   }
   
   if (shelf === '') {
-    return new Error('Shelf not selected')
+    return new Error('Shelf is empty');
   }
 
   book.shelf = shelf;
