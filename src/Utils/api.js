@@ -1,4 +1,4 @@
-import { api, headers } from './Constants'
+import { api, headers } from './constants'
 
 const get = (bookId) =>
   fetch(`${api}/books/${bookId}`, { headers })

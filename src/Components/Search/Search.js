@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import SearchResults from './Results';
 import Loading from '../Loading';
-import BooksAPI from '../../Utils/BooksAPI'
-import { wait_interval } from '../../Utils/Constants'
+import api from '../../Utils/api'
+import { wait_interval } from '../../Utils/constants'
 
 class Search extends Component {
 
@@ -45,13 +45,13 @@ class Search extends Component {
   searchBooks (param) {
     this.setState({ loading: true });
 
-    BooksAPI.search(param, 20)
+    api.search(param, 20)
       .then((results) => this.mapBooksCurrentShelf(results))
       .then((search) => this.setState({ loading: false, search }))
   }
 
   moveBookAndUpdate = (bookId, shelf) => {  
-    BooksAPI.update(bookId, shelf)
+    api.update(bookId, shelf)
       .then((result) => this.selectedBook(bookId))
       .then((book) => this.props.books.addBookToShelf(book, shelf))
       .then((books) => this.props.onUpdateSharedState(books))
