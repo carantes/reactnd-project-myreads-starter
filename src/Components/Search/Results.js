@@ -10,7 +10,7 @@ const SearchResults = (props) => {
           {
             books.map(book => (
               <li key={book.id} >
-                <Book {...book} onMoveBook={onMoveBook}  />
+                <Book draggable={false} {...book} onMoveBook={onMoveBook}  />
               </li>
           ))}
         </ol>

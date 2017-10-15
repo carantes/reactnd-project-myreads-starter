@@ -13,15 +13,29 @@ const Bookshelf = (props) => {
 
   const shelf = books[id];
 
+  const dropBook = (event) => {
+    event.preventDefault();
+    const toShelf = id;
+    const currentShelf = event.dataTransfer.getData("currentShelf");
+    const bookId = event.dataTransfer.getData("bookId");
+    
+    if (bookId && toShelf && (toShelf !== currentShelf))
+      onMoveBook(bookId, toShelf);
+  }
+
+  const allowDropBook = (event) => {
+    event.preventDefault();
+  }
+
   return (
-    <div className="bookshelf">
+    <div className="bookshelf" onDrop={dropBook} onDragOver={allowDropBook} >
       <h2 className="bookshelf-title">{title}</h2>
       <div className="bookshelf-books">
         <ol className="books-grid">
           {
             shelf.map(book => (
               <li key={book.id} >
-                <Book {...book} onMoveBook={onMoveBook} />
+                <Book draggable={true} {...book} onMoveBook={onMoveBook} />
               </li>
           ))}
         </ol>
