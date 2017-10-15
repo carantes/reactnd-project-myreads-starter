@@ -5,7 +5,10 @@ function BooksData (books) {
   this.read = [];
 
   if (books) {
-    books.map(book => this[book.shelf].push(book))
+    if (Array.isArray(books))
+      books.map(book => Array.isArray(this[book.shelf]) ? this[book.shelf].push(book) : book)
+    else
+      throw new Error("Failed to create BooksData object")
   }
 }
 
