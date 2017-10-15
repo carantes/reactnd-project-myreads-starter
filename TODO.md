@@ -1,5 +1,5 @@
 * Lint
-* Testes
+* Testes --> OK
 * Paginação da busca
 * Rating
 * Animação: Slider horizontal das estantes
