@@ -1,5 +1,6 @@
 {
   "title": "My Reads",
+  "subtitle": "Arraste os livros entre as estantes ou clique no botão (+) para adicionar",
   "shelfs": [
     {
       "id": "currentlyReading",
