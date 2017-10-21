@@ -14,8 +14,23 @@ class Library extends Component {
     this.state = {
       loading: true
     }
+    
+    window.addEventListener('resize', this.getCurrentBreakPoint);
+    this.getCurrentBreakPoint();
+  }
 
+  componentWillMount() {
     window.addEventListener('scroll', this.resizeHeaderOnScroll);
+  }  
+
+  componentDidMount() {
+    api.getAll()
+      .then((books) => new BooksData(books))
+      .then((books) => this.updateState(books, false));
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.resizeHeaderOnScroll, { passive: true });
   }
 
   resizeHeaderOnScroll = () => {
@@ -23,11 +38,16 @@ class Library extends Component {
     shrinkOn = 100,
     header = document.getElementById('header');
     
-    if (distanceY > shrinkOn) {
+    if ((distanceY > shrinkOn) && (!this.isMobile)) {
       header.classList.add("smaller");
     } else {
       header.classList.remove("smaller");
     }
+  }
+
+  getCurrentBreakPoint = (e) => {
+    const currentWidth = e ? e.target.innerWidth : window.innerWidth;
+    this.isMobile = currentWidth <= 600;
   }
 
 
@@ -37,12 +57,6 @@ class Library extends Component {
         loading
       })
     })
-  }
-
-  componentDidMount() {
-    api.getAll()
-      .then((books) => new BooksData(books))
-      .then((books) => this.updateState(books, false));
   }
 
   moveBookAndUpdate = (bookId, shelf) => {
