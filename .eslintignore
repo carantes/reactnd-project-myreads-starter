@@ -1,0 +1,4 @@
+dist
+config/setup.js
+node_modules
+*.json

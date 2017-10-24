@@ -1,11 +1,9 @@
-import React from 'react'
+import React from 'react';
 
-const Loading = () => {
-  return (
+const Loading = () => (
     <div className="search-books-results">
       Loading...
     </div>
-  )
-}
+);
 
-export default Loading
+export default Loading;
