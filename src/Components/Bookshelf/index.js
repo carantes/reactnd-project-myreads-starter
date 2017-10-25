@@ -49,7 +49,7 @@ Bookshelf.defaultProps = {
 
 Bookshelf.propTypes = {
     id: PropTypes.string.isRequired,
-    books: PropTypes.instanceOf(BooksData),
+    books: PropTypes.instanceOf(Object),
     title: PropTypes.string.isRequired,
     onMoveBook: PropTypes.func.isRequired,
 };

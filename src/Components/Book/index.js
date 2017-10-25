@@ -1,6 +1,6 @@
 import React from 'react';
 import { string, func, arrayOf, shape, bool } from 'prop-types';
-import Menu from './Menu';
+import Menu from '../Menu';
 
 const Book = (props) => {
     const {
@@ -36,14 +36,14 @@ const Book = (props) => {
                 { menuRender(id) }
             </div>
             <div className="book-title">{title}</div>
-            <div className="book-authors">{authors}</div>
+            <div className="book-authors">{authors && authors.toString()}</div>
         </div>
     );
 };
 
 Book.defaultProps = {
-    authors: [],
     shelf: '',
+    authors: [],
     imageLinks: {
         smallThumbnail: '',
     },

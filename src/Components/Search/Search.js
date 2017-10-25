@@ -27,18 +27,12 @@ class Search extends Component {
 
     mapBooksCurrentShelf(results) {
         let search;
-
-        if (results.error) {
-            search = [];
-        } else {
-            search = results;
-        }
+        results.error ? search = [] : search = results;
 
         search.map((item) => {
             const found = this.props.books.getBookById(item.id);
-            const newItem = Object.assign({}, item);
-            found ? newItem.shelf = found.shelf : newItem.shelf = '';
-            return newItem;
+            found ? item.shelf = found.shelf : item.shelf = '';
+            return item;
         });
 
         return search;

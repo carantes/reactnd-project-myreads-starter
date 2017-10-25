@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import propTypes from 'prop-types';
-import Bookshelf from './Bookshelf';
+import Bookshelf from '../Bookshelf';
 import Loading from '../Loading';
 import { title, subtitle, shelfs, buttonTitle } from './data.json';
-import api from '../../Utils/api';
+import * as api from '../../Utils/api';
 import BooksData from '../../Utils/BooksData';
 
 class Library extends Component {
