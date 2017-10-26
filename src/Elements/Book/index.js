@@ -17,7 +17,7 @@ const Book = (props) => {
         <Menu bookId={bookId} onChangeMenu={onMoveBook} active={shelf} />
     );
 
-    const coverStyle = { width: 128, height: 193, backgroundImage: `url("${imageLinks.smallThumbnail}")` };
+    const coverStyle = { width: 128, height: 193, backgroundImage: `url("${imageLinks && imageLinks.smallThumbnail}")` };
 
     const dragBookStart = (event) => {
         document.getElementById(id).classList.add('book-cover-selected');
@@ -36,7 +36,7 @@ const Book = (props) => {
                 { menuRender(id) }
             </div>
             <div className="book-title">{title}</div>
-            <div className="book-authors">{authors && authors.toString()}</div>
+            <div className="book-authors">{authors && authors.join(',')}</div>
         </div>
     );
 };
@@ -44,9 +44,7 @@ const Book = (props) => {
 Book.defaultProps = {
     shelf: '',
     authors: [],
-    imageLinks: {
-        smallThumbnail: '',
-    },
+    imageLinks: { smallThumbnail: '' },
     onMoveBook: null,
     draggable: false,
 };

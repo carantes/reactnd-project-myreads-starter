@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import propTypes from 'prop-types';
-import Bookshelf from '../Bookshelf';
-import Loading from '../Loading';
 import { title, subtitle, shelfs, buttonTitle } from './data.json';
-import * as api from '../../Utils/api';
+import Bookshelf from '../../Modules/Bookshelf';
+import api from '../../Utils/api';
 import BooksData from '../../Utils/BooksData';
 
 class Library extends Component {
@@ -65,16 +64,6 @@ class Library extends Component {
             .then(books => this.updateState(books));
     }
 
-    renderBookShelf = (id, shelfTitle, books) => (
-        <Bookshelf
-            key={id}
-            id={id}
-            title={shelfTitle}
-            books={books}
-            onMoveBook={this.moveBookAndUpdate}
-        />
-    )
-
     render() {
         const { books } = this.props;
         const { loading } = this.state;
@@ -90,13 +79,18 @@ class Library extends Component {
                 <div className="list-books-content">
                     <div>
                         {
-                            loading ?
-                                <Loading /> :
-                                shelfs.map(
-                                    shelf => (
-                                        this.renderBookShelf(shelf.id, shelf.title, books)
-                                    ),
-                                )
+                            shelfs.map(
+                                shelf => (
+                                    <Bookshelf
+                                        key={shelf.id}
+                                        id={shelf.id}
+                                        title={shelf.title}
+                                        books={books}
+                                        onMoveBook={this.moveBookAndUpdate}
+                                        isLoading={loading}
+                                    />
+                                ),
+                            )
                         }
                     </div>
                 </div>
@@ -113,7 +107,7 @@ Library.defaultProps = {
 };
 
 Library.propTypes = {
-    books: propTypes.instanceOf(BooksData),
+    books: propTypes.instanceOf(Object),
     onUpdateSharedState: propTypes.func.isRequired,
 };
 

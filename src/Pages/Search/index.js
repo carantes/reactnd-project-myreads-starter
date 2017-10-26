@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import BooksData from '../../Utils/BooksData';
-import SearchResults from './Results';
-import Loading from '../Loading';
+import SearchResults from '../../Modules/SearchResults';
 import api from '../../Utils/api';
 import { waitInterval } from '../../Utils/constants';
 
@@ -75,9 +73,12 @@ class Search extends Component {
                         />
                     </div>
                 </div>
-                {loading ?
-                    <Loading /> :
-                    <SearchResults books={search} onMoveBook={this.moveBookAndUpdate} />
+                {
+                    <SearchResults
+                        books={search}
+                        onMoveBook={this.moveBookAndUpdate}
+                        isLoading={loading}
+                    />
                 }
             </div>
         );
@@ -89,7 +90,7 @@ Search.defaultProps = {
 };
 
 Search.propTypes = {
-    books: PropTypes.instanceOf(BooksData),
+    books: PropTypes.instanceOf(Object),
     onUpdateSharedState: PropTypes.func.isRequired,
 };
 

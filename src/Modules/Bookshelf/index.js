@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import BooksData from '../../Utils/BooksData';
-import Book from '../Book';
+import Book from '../../Elements/Book';
+import Loading from '../../Elements/Loading';
 
 const Bookshelf = (props) => {
     const {
@@ -9,6 +9,7 @@ const Bookshelf = (props) => {
         books,
         title,
         onMoveBook,
+        isLoading,
     } = props;
 
     const shelf = books[id];
@@ -32,11 +33,13 @@ const Bookshelf = (props) => {
             <div className="bookshelf-books">
                 <ol className="books-grid">
                     {
-                        shelf.map(book => (
-                            <li key={book.id} >
-                                <Book draggable {...book} onMoveBook={onMoveBook} />
-                            </li>
-                        ))}
+                        isLoading ?
+                            <Loading /> :
+                            shelf.map(book => (
+                                <li key={book.id} >
+                                    <Book draggable {...book} onMoveBook={onMoveBook} />
+                                </li>
+                            ))}
                 </ol>
             </div>
         </div>
@@ -45,6 +48,7 @@ const Bookshelf = (props) => {
 
 Bookshelf.defaultProps = {
     books: {},
+    isLoading: false,
 };
 
 Bookshelf.propTypes = {
@@ -52,6 +56,7 @@ Bookshelf.propTypes = {
     books: PropTypes.instanceOf(Object),
     title: PropTypes.string.isRequired,
     onMoveBook: PropTypes.func.isRequired,
+    isLoading: PropTypes.bool,
 };
 
 export default Bookshelf;

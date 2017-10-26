@@ -6,4 +6,3 @@ export const headers = {
 };
 
 export const waitInterval = 500;
-

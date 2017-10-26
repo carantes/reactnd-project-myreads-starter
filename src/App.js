@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Route, BrowserRouter } from 'react-router-dom';
-import Library from '../Library/Library';
-import Search from '../Search/Search';
-import BooksData from '../../Utils/BooksData';
+import BooksData from './Utils/BooksData';
+import Library from './Pages/Library';
+import Search from './Pages/Search';
 import './App.css';
 
 class App extends Component {
