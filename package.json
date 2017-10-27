@@ -72,7 +72,7 @@
       "!src/index.js",
       "!sripts/*.js",
       "!src/Utils/api.js",
-      "!src/Utils/constants.js"
+      "!src/Utils/Constants.js"
     ],
     "setupFiles": [
       "<rootDir>/config/setup.js",

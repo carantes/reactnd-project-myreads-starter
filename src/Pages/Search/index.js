@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import SearchResults from '../../Modules/SearchResults';
 import api from '../../Utils/api';
-import { waitInterval } from '../../Utils/constants';
+import { waitInterval } from '../../Utils/Constants';
 
 class Search extends Component {
     constructor() {
