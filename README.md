@@ -5,19 +5,18 @@ This is the final assessment project for Udacity's React Fundamentals course.
 ### Requirements
 
 * NodeJS
-* Yarn
 
 
 ### Installing
 
 ```
-yarn
+npm install
 ```
 
 ### Running
 
 ```
-yarn start
+npm start
 ```
 
 > http://localhost:3000
@@ -25,7 +24,7 @@ yarn start
 ## Running the tests & code lint
 
 ```
-yarn check 
+npm run check 
 ```
 
 ## How this project is organized
