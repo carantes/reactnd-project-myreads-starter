@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { HashLoader } from 'react-spinners';
 import Book from '../../Elements/Book';
-import Loading from '../../Elements/Loading';
+import { spinner } from './data.json';
 
 const SearchResults = (props) => {
     const { books, onMoveBook, isLoading } = props;
@@ -11,7 +12,11 @@ const SearchResults = (props) => {
             <ol className="books-grid">
                 {
                     isLoading ?
-                        <Loading /> :
+                        <HashLoader
+                            color={spinner.color}
+                            size={spinner.size}
+                            loading={isLoading}
+                        /> :
                         books.map(book => (
                             <li key={book.id} >
                                 <Book draggable={false} {...book} onMoveBook={onMoveBook} />
